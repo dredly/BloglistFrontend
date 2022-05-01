@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import NewBlogForm from './components/NewBlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -9,6 +10,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [message, setMessage] = useState({})
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -38,9 +40,21 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setMessage({
+        content: 'Successful login',
+        messageType: 'success'
+      })
+      setTimeout(() => {
+        setMessage({})
+      }, 3000)
     } catch (exception) {
-      console.log(exception)
-      console.log('Wrong credentials')
+      setMessage({
+        content: 'Wrong credentials',
+        messageType: 'error'
+      })
+      setTimeout(() => {
+        setMessage({})
+      }, 3000)
     }
   }
 
@@ -51,8 +65,25 @@ const App = () => {
 
   const handleNewBlog = async (evt, blogObj) => {
     evt.preventDefault()
-    const returnedBlog = await blogService.create(blogObj)
-    setBlogs(blogs.concat(returnedBlog))
+    try {
+      const returnedBlog = await blogService.create(blogObj)
+      setBlogs(blogs.concat(returnedBlog))
+      setMessage({
+        content: `A new blog - ${returnedBlog.title} - added`,
+        messageType: 'success'
+      })
+      setTimeout(() => {
+        setMessage({})
+      }, 3000)
+    } catch (err) {
+      setMessage({
+        content: err.response.data.error,
+        messageType: 'error'
+      })
+      setTimeout(() => {
+        setMessage({})
+      }, 3000)
+    }
   }
 
   const loginForm = () => (
@@ -85,6 +116,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={message} />
       {user === null && loginForm()}
       {user !== null && 
         <>
