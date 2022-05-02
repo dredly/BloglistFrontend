@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+//Form for adding a new blog
 const NewBlogForm = ({handleNew}) => {
 	const [title, setTitle] = useState('')
 	const [author, setAuthor] = useState('')
