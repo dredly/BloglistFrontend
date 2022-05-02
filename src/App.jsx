@@ -5,6 +5,7 @@ import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import userService from './services/users'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -90,6 +91,15 @@ const App = () => {
     }
   }
 
+  const likeBlog = async blog => {
+		const id = blog.id
+    console.log(id)
+		const returnedBlog = await blogService.update(id, {...blog, likes: blog.likes + 1})
+    const returnedBlogUser = await userService.getOne(returnedBlog.user)
+    returnedBlog.user = returnedBlogUser
+    setBlogs(blogs.map(b => b.id !== id ? b : returnedBlog))
+	}
+
   const loginForm = () => (
     <>
       <h2>Login to application</h2>
@@ -132,7 +142,7 @@ const App = () => {
             <NewBlogForm handleNew={handleNewBlog}/>
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} handleLike={likeBlog} />
           )}
         </>
       }
