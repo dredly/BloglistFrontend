@@ -100,6 +100,30 @@ const App = () => {
     setBlogs(blogs.map(b => b.id !== id ? b : returnedBlog))
 	}
 
+  const deleteBlog = async blogId => {
+    if (window.confirm('Are you sure you want to delete this?')) {
+      try {
+        await blogService.deleteBlog(blogId)
+        setBlogs(blogs.filter(b => b.id !== blogId))
+        setMessage({
+          content: 'Successfully deleted',
+          messageType: 'success'
+        })
+        setTimeout(() => {
+          setMessage({})
+        }, 3000)
+      } catch (err) {
+        setMessage({
+          content: err.response.data.error,
+          messageType: 'error'
+        })
+        setTimeout(() => {
+          setMessage({})
+        }, 3000)
+      }
+    }
+  }
+
   const loginForm = () => (
     <>
       <h2>Login to application</h2>
@@ -142,7 +166,7 @@ const App = () => {
             <NewBlogForm handleNew={handleNewBlog}/>
           </Togglable>
           {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} handleLike={likeBlog} />
+            <Blog key={blog.id} blog={blog} handleLike={likeBlog} handleDelete={deleteBlog} currentUser={user} />
           )}
         </>
       }
