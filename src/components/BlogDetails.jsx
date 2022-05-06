@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 
-const BlogDetails = ({blog, disp, handleLike, handleDelete, currentUser}) => {
+const BlogDetails = ({ blog, disp, handleLike, handleDelete, currentUser }) => {
 	const deleteButtonStyle = {
 		display: currentUser.username === blog.user.username
 			? ''

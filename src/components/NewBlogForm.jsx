@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 //Form for adding a new blog
-const NewBlogForm = ({handleNew}) => {
+const NewBlogForm = ({ handleNew }) => {
 	const [title, setTitle] = useState('')
 	const [author, setAuthor] = useState('')
 	const [url, setUrl] = useState('')
@@ -10,12 +10,12 @@ const NewBlogForm = ({handleNew}) => {
 			<h2>Add a new blog</h2>
 			<form onSubmit={
 				evt => {
-					handleNew(evt, {title, author, url})
+					handleNew(evt, { title, author, url })
 					setTitle('')
 					setAuthor('')
 					setUrl('')
 				}
-				}>
+			}>
 				<div>
 					<label>
 						title:
