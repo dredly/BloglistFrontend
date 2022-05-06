@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 const BlogDetails = ({blog, disp, handleLike, handleDelete, currentUser}) => {
 	const deleteButtonStyle = {
 		display: currentUser.username === blog.user.username
@@ -14,6 +16,14 @@ const BlogDetails = ({blog, disp, handleLike, handleDelete, currentUser}) => {
 			</div>
 		</div>
 	)
+}
+
+BlogDetails.propTypes = {
+	blog: PropTypes.object.isRequired,
+	disp: PropTypes.object.isRequired,
+	handleLike: PropTypes.func.isRequired,
+	handleDelete: PropTypes.func.isRequired,
+	currentUser: PropTypes.object.isRequired,
 }
 
 export default BlogDetails
