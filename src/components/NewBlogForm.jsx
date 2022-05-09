@@ -19,7 +19,7 @@ const NewBlogForm = ({ handleNew }) => {
 				<div>
 					<label>
 						title:
-						<input type="text" value={title} onChange={evt => {
+						<input id="titleInput" type="text" value={title} onChange={evt => {
 							setTitle(evt.target.value)
 						}} />
 					</label>
@@ -27,7 +27,7 @@ const NewBlogForm = ({ handleNew }) => {
 				<div>
 					<label>
 						author:
-						<input type="text" value={author} onChange={evt => {
+						<input id="authorInput" type="text" value={author} onChange={evt => {
 							setAuthor(evt.target.value)
 						}} />
 					</label>
@@ -35,12 +35,12 @@ const NewBlogForm = ({ handleNew }) => {
 				<div>
 					<label>
 						url:
-						<input type="text" value={url} onChange={evt => {
+						<input id="urlInput" type="text" value={url} onChange={evt => {
 							setUrl(evt.target.value)
 						}} />
 					</label>
 				</div>
-				<button type="submit">Add</button>
+				<button id="submitButton" type="submit">Add</button>
 			</form>
 		</>
 	)
