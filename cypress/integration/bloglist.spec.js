@@ -90,5 +90,40 @@ describe('Blog app', function() {
 				cy.get('.deleteButton').should('not.be.visible')
 			})
 		})
+
+		describe('and there are multiple blogs with different numbers of likes', function () {
+			beforeEach(function () {
+				cy.createBlog({
+					title: 'Most liked',
+					author: 'Albert Einstein',
+					url: 'blog.com',
+					likes: 10
+				})
+				cy.createBlog({
+					title: 'Second most liked',
+					author: 'Albert Einstein',
+					url: 'blog.com',
+					likes: 8
+				})
+				cy.createBlog({
+					title: 'Least liked',
+					author: 'Albert Einstein',
+					url: 'blog.com',
+					likes: 1
+				})
+				cy.createBlog({
+					title: 'Third most liked',
+					author: 'Albert Einstein',
+					url: 'blog.com',
+					likes: 6
+				})
+			})
+
+			it('the blogs are ordered by number of likes, descending', function () {
+				cy.get('.blog0').should('contain', 'Most liked')
+				cy.get('.blog1').should('contain', 'Second most liked')
+				cy.get('.blog3').should('contain', 'Least liked')
+			})
+		})
 	})
 })
