@@ -15,7 +15,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "eslint": "eslint --fix --ext .js,.jsx ."
+    "eslint": "eslint --fix --ext .js,.jsx .",
+    "cypress:open": "cypress open"
   },
   "eslintConfig": {
     "extends": [
@@ -40,6 +41,8 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^14.1.1",
+    "cypress": "^9.6.1",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-jest": "^26.1.5"
   }
 }
