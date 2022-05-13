@@ -68,6 +68,27 @@ describe('Blog app', function() {
 				cy.get('.likeButton').click()
 				cy.contains('1 likes')
 			})
+
+			it('The user who created it can delete it', function() {
+				cy.contains('Test Blog').contains('view').click()
+				cy.get('.deleteButton').click()
+				cy.contains('Successfully deleted')
+				cy.get('html').should('not.contain', 'Test Blog')
+			})
+
+			it('a different user who has not created it cannot delete it', function () {
+				const otherUser = {
+					name: 'Other User',
+					username: 'other',
+					password: 'ou123'
+				}
+				cy.request('POST', 'http://localhost:3003/api/users', otherUser)
+				cy.visit('http://localhost:3000')
+				cy.login({ username: 'other', password: 'ou123' })
+
+				cy.contains('Test Blog').contains('view').click()
+				cy.get('.deleteButton').should('not.be.visible')
+			})
 		})
 	})
 })

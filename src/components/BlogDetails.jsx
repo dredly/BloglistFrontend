@@ -12,7 +12,7 @@ const BlogDetails = ({ blog, disp, handleLike, handleDelete, currentUser }) => {
 			<p>{blog.likes} likes <button className='likeButton' onClick={() => handleLike(blog)}>like</button></p>
 			<p>Added by {blog.user.name}</p>
 			<div style={deleteButtonStyle}>
-				<button onClick={() => handleDelete(blog.id)}>Delete</button>
+				<button className='deleteButton' onClick={() => handleDelete(blog.id)}>Delete</button>
 			</div>
 		</div>
 	)
