@@ -1,21 +1,23 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
 import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import NewBlogForm from "./components/NewBlogForm";
+import LoginForm from "./components/LoginForm";
 import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import userService from "./services/users";
+import { useDispatch } from "react-redux";
+import { setNotification } from "./reducers/notificationReducer";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [message, setMessage] = useState({});
 
   const blogFormRef = useRef();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -42,26 +44,39 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
-      setMessage({
-        content: "Successful login",
-        messageType: "success",
-      });
-      setTimeout(() => {
-        setMessage({});
-      }, 3000);
+      dispatch(
+        setNotification(
+          {
+            content: "Login successful",
+            messageType: "success",
+          },
+          3000
+        )
+      );
     } catch (exception) {
-      setMessage({
-        content: "Wrong credentials",
-        messageType: "error",
-      });
-      setTimeout(() => {
-        setMessage({});
-      }, 3000);
+      dispatch(
+        setNotification(
+          {
+            content: "Wrong credentials",
+            messageType: "error",
+          },
+          3000
+        )
+      );
     }
   };
 
   const handleLogout = () => {
     setUser(null);
+    dispatch(
+      setNotification(
+        {
+          content: "Logged out",
+          messageType: "success",
+        },
+        3000
+      )
+    );
     window.localStorage.removeItem("loggedBlogListUser");
   };
 
@@ -71,27 +86,30 @@ const App = () => {
     try {
       const returnedBlog = await blogService.create(blogObj);
       setBlogs(blogs.concat(returnedBlog));
-      setMessage({
-        content: `A new blog - ${returnedBlog.title} - added`,
-        messageType: "success",
-      });
-      setTimeout(() => {
-        setMessage({});
-      }, 3000);
+      dispatch(
+        setNotification(
+          {
+            content: `A new blog - ${returnedBlog.title} - added`,
+            messageType: "success",
+          },
+          3000
+        )
+      );
     } catch (err) {
-      setMessage({
-        content: err.response.data.error,
-        messageType: "error",
-      });
-      setTimeout(() => {
-        setMessage({});
-      }, 3000);
+      dispatch(
+        setNotification(
+          {
+            content: err.response.data.error,
+            messageType: "error",
+          },
+          3000
+        )
+      );
     }
   };
 
   const likeBlog = async (blog) => {
     const id = blog.id;
-    console.log(id);
     const returnedBlog = await blogService.update(id, {
       ...blog,
       likes: blog.likes + 1,
@@ -106,60 +124,38 @@ const App = () => {
       try {
         await blogService.deleteBlog(blogId);
         setBlogs(blogs.filter((b) => b.id !== blogId));
-        setMessage({
-          content: "Successfully deleted",
-          messageType: "success",
-        });
-        setTimeout(() => {
-          setMessage({});
-        }, 3000);
+        dispatch(
+          setNotification(
+            {
+              content: "Successfully deleted",
+              messageType: "success",
+            },
+            3000
+          )
+        );
       } catch (err) {
-        setMessage({
-          content: err.response.data.error,
-          messageType: "error",
-        });
-        setTimeout(() => {
-          setMessage({});
-        }, 3000);
+        dispatch(
+          setNotification({
+            content: err.response.data.error,
+            messageType: "error",
+          })
+        );
       }
     }
   };
 
-  const loginForm = () => (
-    <>
-      <h2>Login to application</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            id="username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            id="password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit" id="loginButton">
-          Login
-        </button>
-      </form>
-    </>
-  );
-
   return (
     <div>
-      <Notification message={message} />
-      {user === null && loginForm()}
+      <Notification />
+      {user === null && (
+        <LoginForm
+          handleLogin={handleLogin}
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+        />
+      )}
       {user !== null && (
         <>
           <h2>blogs</h2>
