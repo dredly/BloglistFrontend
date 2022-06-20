@@ -7,11 +7,11 @@ import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import userService from "./services/users";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
+import { initializeBlogs, addNewBlog } from "./reducers/blogReducer";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -20,8 +20,10 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
+
+  const blogs = useSelector((state) => state.blogs);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogListUser");
@@ -84,12 +86,11 @@ const App = () => {
     evt.preventDefault();
     blogFormRef.current.toggleVisibility();
     try {
-      const returnedBlog = await blogService.create(blogObj);
-      setBlogs(blogs.concat(returnedBlog));
+      addNewBlog(blogObj);
       dispatch(
         setNotification(
           {
-            content: `A new blog - ${returnedBlog.title} - added`,
+            content: `A new blog - ${blogObj.title} - added`,
             messageType: "success",
           },
           3000
@@ -166,18 +167,16 @@ const App = () => {
           <Togglable buttonLabel="add a new blog" ref={blogFormRef}>
             <NewBlogForm handleNew={handleNewBlog} />
           </Togglable>
-          {blogs
-            .sort((a, b) => b.likes - a.likes)
-            .map((blog, idx) => (
-              <div key={blog.id} className={`blog${idx}`}>
-                <Blog
-                  blog={blog}
-                  handleLike={likeBlog}
-                  handleDelete={deleteBlog}
-                  currentUser={user}
-                />
-              </div>
-            ))}
+          {blogs.map((blog, idx) => (
+            <div key={blog.id} className={`blog${idx}`}>
+              <Blog
+                blog={blog}
+                handleLike={likeBlog}
+                handleDelete={deleteBlog}
+                currentUser={user}
+              />
+            </div>
+          ))}
         </>
       )}
     </div>
