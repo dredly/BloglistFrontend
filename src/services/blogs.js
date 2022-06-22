@@ -33,13 +33,18 @@ const update = async (id, newObj) => {
 };
 
 const likeBlog = async (id) => {
-  const response = await axios.get(`${baseUrl}/${id}`);
-  const oldObj = response.data;
+  const config = {
+    headers: {
+      Authorization: token,
+    },
+  };
+  const allBlogs = await axios.get(baseUrl);
+  const oldObj = allBlogs.data.find((blog) => blog.id === id);
   const newObj = {
     ...oldObj,
     likes: oldObj.likes + 1,
   };
-  await axios.put(`${baseUrl}/${id}`, newObj);
+  await axios.put(`${baseUrl}/${id}`, newObj, config);
 };
 
 const deleteBlog = async (id) => {

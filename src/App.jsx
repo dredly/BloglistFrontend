@@ -9,7 +9,12 @@ import loginService from "./services/login";
 import userService from "./services/users";
 import { useSelector, useDispatch } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
-import { initializeBlogs, addNewBlog, likeBlog } from "./reducers/blogReducer";
+import {
+  initializeBlogs,
+  addNewBlog,
+  deleteBlog,
+  likeBlog,
+} from "./reducers/blogReducer";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -82,7 +87,7 @@ const App = () => {
     window.localStorage.removeItem("loggedBlogListUser");
   };
 
-  const handleNewBlog = async (evt, blogObj) => {
+  const handleNewBlog = (evt, blogObj) => {
     evt.preventDefault();
     blogFormRef.current.toggleVisibility();
     try {
@@ -109,15 +114,14 @@ const App = () => {
     }
   };
 
-  const handleLike = async (id) => {
+  const handleLike = (id) => {
     dispatch(likeBlog(id));
   };
 
-  const deleteBlog = async (blogId) => {
+  const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this?")) {
       try {
-        await blogService.deleteBlog(blogId);
-        setBlogs(blogs.filter((b) => b.id !== blogId));
+        dispatch(deleteBlog(id));
         dispatch(
           setNotification(
             {
@@ -165,7 +169,7 @@ const App = () => {
               <Blog
                 blog={blog}
                 handleLike={() => handleLike(blog.id)}
-                handleDelete={deleteBlog}
+                handleDelete={() => handleDelete(blog.id)}
                 currentUser={user}
               />
             </div>

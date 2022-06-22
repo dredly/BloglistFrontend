@@ -19,13 +19,17 @@ const blogSlice = createSlice({
         .map((b) => (b.id !== id ? b : updatedBlog))
         .sort((a, b) => b.likes - a.likes);
     },
+    destroy(state, action) {
+      const id = action.payload;
+      return state.filter((b) => b.id !== id);
+    },
     setBlogs(state, action) {
       return action.payload.sort((a, b) => b.likes - a.likes);
     },
   },
 });
 
-export const { add, like, setBlogs } = blogSlice.actions;
+export const { add, like, destroy, setBlogs } = blogSlice.actions;
 
 export const initializeBlogs = () => {
   return async (dispatch) => {
@@ -45,6 +49,13 @@ export const likeBlog = (id) => {
   return async (dispatch) => {
     await blogService.likeBlog(id);
     dispatch(like(id));
+  };
+};
+
+export const deleteBlog = (id) => {
+  return async (dispatch) => {
+    await blogService.deleteBlog(id);
+    dispatch(destroy(id));
   };
 };
 
