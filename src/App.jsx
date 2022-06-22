@@ -9,7 +9,7 @@ import loginService from "./services/login";
 import userService from "./services/users";
 import { useSelector, useDispatch } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
-import { initializeBlogs, addNewBlog } from "./reducers/blogReducer";
+import { initializeBlogs, addNewBlog, likeBlog } from "./reducers/blogReducer";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -86,7 +86,7 @@ const App = () => {
     evt.preventDefault();
     blogFormRef.current.toggleVisibility();
     try {
-      addNewBlog(blogObj);
+      dispatch(addNewBlog(blogObj));
       dispatch(
         setNotification(
           {
@@ -109,15 +109,8 @@ const App = () => {
     }
   };
 
-  const likeBlog = async (blog) => {
-    const id = blog.id;
-    const returnedBlog = await blogService.update(id, {
-      ...blog,
-      likes: blog.likes + 1,
-    });
-    const returnedBlogUser = await userService.getOne(returnedBlog.user);
-    returnedBlog.user = returnedBlogUser;
-    setBlogs(blogs.map((b) => (b.id !== id ? b : returnedBlog)));
+  const handleLike = async (id) => {
+    dispatch(likeBlog(id));
   };
 
   const deleteBlog = async (blogId) => {
@@ -171,7 +164,7 @@ const App = () => {
             <div key={blog.id} className={`blog${idx}`}>
               <Blog
                 blog={blog}
-                handleLike={likeBlog}
+                handleLike={() => handleLike(blog.id)}
                 handleDelete={deleteBlog}
                 currentUser={user}
               />

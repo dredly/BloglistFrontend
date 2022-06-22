@@ -32,6 +32,16 @@ const update = async (id, newObj) => {
   return response.data;
 };
 
+const likeBlog = async (id) => {
+  const response = await axios.get(`${baseUrl}/${id}`);
+  const oldObj = response.data;
+  const newObj = {
+    ...oldObj,
+    likes: oldObj.likes + 1,
+  };
+  await axios.put(`${baseUrl}/${id}`, newObj);
+};
+
 const deleteBlog = async (id) => {
   const config = {
     headers: {
@@ -42,4 +52,4 @@ const deleteBlog = async (id) => {
   return response.data;
 };
 
-export default { getAll, setToken, create, update, deleteBlog };
+export default { getAll, setToken, create, update, likeBlog, deleteBlog };
