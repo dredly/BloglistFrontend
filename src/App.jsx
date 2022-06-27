@@ -1,29 +1,21 @@
-import { useState, useEffect, useRef } from "react";
-import Blog from "./components/Blog";
+import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Notification from "./components/Notification";
-import NewBlogForm from "./components/NewBlogForm";
 import LoginForm from "./components/LoginForm";
-import Togglable from "./components/Togglable";
+import BlogList from "./components/BlogList";
+import Users from "./components/Users";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-import userService from "./services/users";
 import { useSelector, useDispatch } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
-import { initializeBlogs, addNewBlog } from "./reducers/blogReducer";
 import { changeUser } from "./reducers/userReducer";
 
 const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const blogFormRef = useRef();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(initializeBlogs());
-  }, [dispatch]);
-
-  const blogs = useSelector((state) => state.blogs);
   const user = useSelector((state) => state.user.current);
 
   useEffect(() => {
@@ -86,35 +78,8 @@ const App = () => {
     window.localStorage.removeItem("loggedBlogListUser");
   };
 
-  const handleNewBlog = (evt, blogObj) => {
-    evt.preventDefault();
-    blogFormRef.current.toggleVisibility();
-    try {
-      dispatch(addNewBlog(blogObj));
-      dispatch(
-        setNotification(
-          {
-            content: `A new blog - ${blogObj.title} - added`,
-            messageType: "success",
-          },
-          3000
-        )
-      );
-    } catch (err) {
-      dispatch(
-        setNotification(
-          {
-            content: err.response.data.error,
-            messageType: "error",
-          },
-          3000
-        )
-      );
-    }
-  };
-
   return (
-    <div>
+    <Router>
       <Notification />
       {user === null && (
         <LoginForm
@@ -132,17 +97,13 @@ const App = () => {
             {user.name} logged in.
             <button onClick={handleLogout}>Log out</button>
           </p>
-          <Togglable buttonLabel="add a new blog" ref={blogFormRef}>
-            <NewBlogForm handleNew={handleNewBlog} />
-          </Togglable>
-          {blogs.map((blog, idx) => (
-            <div key={blog.id} className={`blog${idx}`}>
-              <Blog blog={blog} currentUser={user} />
-            </div>
-          ))}
+          <Routes>
+            <Route path="/users" element={<Users />} />
+            <Route path="/" element={<BlogList />} />
+          </Routes>
         </>
       )}
-    </div>
+    </Router>
   );
 };
 
