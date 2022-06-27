@@ -15,11 +15,11 @@ import {
   deleteBlog,
   likeBlog,
 } from "./reducers/blogReducer";
+import { changeUser } from "./reducers/userReducer";
 
 const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
 
   const blogFormRef = useRef();
   const dispatch = useDispatch();
@@ -29,26 +29,31 @@ const App = () => {
   }, [dispatch]);
 
   const blogs = useSelector((state) => state.blogs);
+  const user = useSelector((state) => state.user.current);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogListUser");
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      const loggedInUser = JSON.parse(loggedUserJSON);
+      console.log("LOGGED IN USER", loggedInUser);
+      dispatch(changeUser(loggedInUser));
+      blogService.setToken(loggedInUser.token);
     }
-  }, []);
+  }, [dispatch]);
 
   const handleLogin = async (evt) => {
     evt.preventDefault();
     try {
-      const user = await loginService.login({
+      const loggedInUser = await loginService.login({
         username,
         password,
       });
-      window.localStorage.setItem("loggedBlogListUser", JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
+      window.localStorage.setItem(
+        "loggedBlogListUser",
+        JSON.stringify(loggedInUser)
+      );
+      blogService.setToken(loggedInUser.token);
+      dispatch(changeUser(loggedInUser));
       setUsername("");
       setPassword("");
       dispatch(
@@ -74,7 +79,7 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    setUser(null);
+    dispatch(changeUser(null));
     dispatch(
       setNotification(
         {
