@@ -9,12 +9,7 @@ import loginService from "./services/login";
 import userService from "./services/users";
 import { useSelector, useDispatch } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
-import {
-  initializeBlogs,
-  addNewBlog,
-  deleteBlog,
-  likeBlog,
-} from "./reducers/blogReducer";
+import { initializeBlogs, addNewBlog } from "./reducers/blogReducer";
 import { changeUser } from "./reducers/userReducer";
 
 const App = () => {
@@ -35,7 +30,6 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogListUser");
     if (loggedUserJSON) {
       const loggedInUser = JSON.parse(loggedUserJSON);
-      console.log("LOGGED IN USER", loggedInUser);
       dispatch(changeUser(loggedInUser));
       blogService.setToken(loggedInUser.token);
     }
@@ -119,34 +113,6 @@ const App = () => {
     }
   };
 
-  const handleLike = (id) => {
-    dispatch(likeBlog(id));
-  };
-
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this?")) {
-      try {
-        dispatch(deleteBlog(id));
-        dispatch(
-          setNotification(
-            {
-              content: "Successfully deleted",
-              messageType: "success",
-            },
-            3000
-          )
-        );
-      } catch (err) {
-        dispatch(
-          setNotification({
-            content: err.response.data.error,
-            messageType: "error",
-          })
-        );
-      }
-    }
-  };
-
   return (
     <div>
       <Notification />
@@ -171,12 +137,7 @@ const App = () => {
           </Togglable>
           {blogs.map((blog, idx) => (
             <div key={blog.id} className={`blog${idx}`}>
-              <Blog
-                blog={blog}
-                handleLike={() => handleLike(blog.id)}
-                handleDelete={() => handleDelete(blog.id)}
-                currentUser={user}
-              />
+              <Blog blog={blog} currentUser={user} />
             </div>
           ))}
         </>
