@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, useMatch } from "react-router-dom";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import BlogList from "./components/BlogList";
 import Users from "./components/Users";
+import User from "./components/User";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import { useSelector, useDispatch } from "react-redux";
@@ -78,8 +79,11 @@ const App = () => {
     window.localStorage.removeItem("loggedBlogListUser");
   };
 
+  const match = useMatch("/users/:id");
+  const userId = match ? match.params.id : null;
+
   return (
-    <Router>
+    <>
       <Notification />
       {user === null && (
         <LoginForm
@@ -98,12 +102,13 @@ const App = () => {
             <button onClick={handleLogout}>Log out</button>
           </p>
           <Routes>
+            <Route path="/users/:id" element={<User id={userId} />} />
             <Route path="/users" element={<Users />} />
             <Route path="/" element={<BlogList />} />
           </Routes>
         </>
       )}
-    </Router>
+    </>
   );
 };
 
