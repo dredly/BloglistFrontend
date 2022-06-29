@@ -1,8 +1,8 @@
 import { useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { initializeBlogs, addNewBlog } from "../reducers/blogReducer";
 import { setNotification } from "../reducers/notificationReducer";
-import Blog from "./Blog";
 import NewBlogForm from "./NewBlogForm";
 import Togglable from "./Togglable";
 
@@ -45,14 +45,24 @@ const BlogList = () => {
     }
   };
 
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: "solid",
+    borderWidth: 1,
+    marginBottom: 5,
+  };
+
   return (
     <>
       <Togglable buttonLabel="add a new blog" ref={blogFormRef}>
         <NewBlogForm handleNew={handleNewBlog} />
       </Togglable>
       {blogs.map((blog, idx) => (
-        <div key={blog.id} className={`blog${idx}`}>
-          <Blog blog={blog} currentUser={user} />
+        <div key={blog.id} className={`blog${idx}`} style={blogStyle}>
+          <Link to={`/blogs/${blog.id}`}>
+            {blog.title} {blog.author}
+          </Link>
         </div>
       ))}
     </>

@@ -3,6 +3,7 @@ import { Routes, Route, useMatch } from "react-router-dom";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import BlogList from "./components/BlogList";
+import Blog from "./components/Blog";
 import Users from "./components/Users";
 import User from "./components/User";
 import blogService from "./services/blogs";
@@ -79,8 +80,11 @@ const App = () => {
     window.localStorage.removeItem("loggedBlogListUser");
   };
 
-  const match = useMatch("/users/:id");
-  const userId = match ? match.params.id : null;
+  const userMatch = useMatch("/users/:id");
+  const userId = userMatch ? userMatch.params.id : null;
+
+  const blogMatch = useMatch("/blogs/:id");
+  const blogId = blogMatch ? blogMatch.params.id : null;
 
   return (
     <>
@@ -102,6 +106,7 @@ const App = () => {
             <button onClick={handleLogout}>Log out</button>
           </p>
           <Routes>
+            <Route path="/blogs/:id" element={<Blog id={blogId} />} />
             <Route path="/users/:id" element={<User id={userId} />} />
             <Route path="/users" element={<Users />} />
             <Route path="/" element={<BlogList />} />
