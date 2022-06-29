@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import userService from "../services/users";
 
 const User = ({ id }) => {
@@ -21,7 +22,9 @@ const User = ({ id }) => {
       <h3>Added blogs</h3>
       <ul>
         {user.blogs.map((b) => (
-          <li key={b.id}>{b.title}</li>
+          <li key={b.id}>
+            <Link to={`/blogs/${b.id}`}>{b.title}</Link>
+          </li>
         ))}
       </ul>
     </div>

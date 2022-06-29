@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, useMatch } from "react-router-dom";
+import { Routes, Route, Link, useMatch } from "react-router-dom";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import BlogList from "./components/BlogList";
@@ -86,25 +86,43 @@ const App = () => {
   const blogMatch = useMatch("/blogs/:id");
   const blogId = blogMatch ? blogMatch.params.id : null;
 
+  const padding = {
+    padding: 5,
+  };
+
+  const navbarBasic = {
+    backgroundColor: "lightgrey",
+    padding: 3,
+  };
+
   return (
     <>
-      <Notification />
       {user === null && (
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
-        />
+        <>
+          <Notification />
+          <LoginForm
+            handleLogin={handleLogin}
+            username={username}
+            setUsername={setUsername}
+            password={password}
+            setPassword={setPassword}
+          />
+        </>
       )}
       {user !== null && (
         <>
-          <h2>blogs</h2>
-          <p>
-            {user.name} logged in.
+          <nav style={navbarBasic}>
+            <Link style={padding} to="/">
+              blogs
+            </Link>
+            <Link style={padding} to="/users">
+              users
+            </Link>
+            <span style={padding}>{user.name} logged in</span>
             <button onClick={handleLogout}>Log out</button>
-          </p>
+          </nav>
+          <Notification />
+          <h2>blog app</h2>
           <Routes>
             <Route path="/blogs/:id" element={<Blog id={blogId} />} />
             <Route path="/users/:id" element={<User id={userId} />} />

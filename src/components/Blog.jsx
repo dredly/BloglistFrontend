@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import blogService from "../services/blogs";
 import { likeBlog } from "../reducers/blogReducer";
 
 const Blog = ({ id }) => {
