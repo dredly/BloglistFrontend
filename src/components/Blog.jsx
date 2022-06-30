@@ -16,6 +16,8 @@ const Blog = ({ id }) => {
     return null;
   }
 
+  console.log("COMMENTS", blog.comments);
+
   return (
     <div>
       <h1>
@@ -27,6 +29,16 @@ const Blog = ({ id }) => {
         <button onClick={handleLike}>like</button>
       </p>
       <p>Added by {blog.user.name}</p>
+      {blog.comments.length ? (
+        <>
+          <h3>Comments</h3>
+          <ul>
+            {blog.comments.map((c) => (
+              <li key={c.id}>{c.text}</li>
+            ))}
+          </ul>
+        </>
+      ) : null}
     </div>
   );
 };
