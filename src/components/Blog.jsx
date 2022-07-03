@@ -1,12 +1,17 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { likeBlog } from "../reducers/blogReducer";
+import { initializeBlogs, likeBlog } from "../reducers/blogReducer";
+import CommentForm from "./CommentForm";
 
 const Blog = ({ id }) => {
   const blogs = useSelector((state) => state.blogs);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   const blog = blogs.find((b) => b.id === id);
-
-  const dispatch = useDispatch();
 
   const handleLike = () => {
     dispatch(likeBlog(id));
@@ -15,8 +20,6 @@ const Blog = ({ id }) => {
   if (!blog) {
     return null;
   }
-
-  console.log("COMMENTS", blog.comments);
 
   return (
     <div>
@@ -29,6 +32,7 @@ const Blog = ({ id }) => {
         <button onClick={handleLike}>like</button>
       </p>
       <p>Added by {blog.user.name}</p>
+      <CommentForm id={blog.id} />
       {blog.comments.length ? (
         <>
           <h3>Comments</h3>

@@ -62,6 +62,20 @@ const deleteBlog = async (id) => {
   return response.data;
 };
 
+const addComment = async (id, newObj) => {
+  const config = {
+    headers: {
+      Authorization: token,
+    },
+  };
+  const response = await axios.post(
+    `${baseUrl}/${id}/comments`,
+    newObj,
+    config
+  );
+  return response.data;
+};
+
 export default {
   getAll,
   getOne,
@@ -70,4 +84,5 @@ export default {
   update,
   likeBlog,
   deleteBlog,
+  addComment,
 };

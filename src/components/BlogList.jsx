@@ -10,7 +10,6 @@ const BlogList = () => {
   const dispatch = useDispatch();
 
   const blogs = useSelector((state) => state.blogs);
-  const user = useSelector((state) => state.user.current);
 
   const blogFormRef = useRef();
 
