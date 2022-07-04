@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { commentOnBlog } from "../reducers/blogReducer";
 import { setNotification } from "../reducers/notificationReducer";
+import { Button, Form, Row, Col } from "react-bootstrap";
 
 const CommentForm = ({ id }) => {
   const [text, setText] = useState("");
@@ -38,17 +39,28 @@ const CommentForm = ({ id }) => {
   };
 
   return (
-    <form onSubmit={(evt) => handleSubmit(evt, text)}>
-      <input
-        id="textInput"
-        type="text"
-        value={text}
-        onChange={(evt) => {
-          setText(evt.target.value);
-        }}
-      />
-      <button type="submit">add comment</button>
-    </form>
+    <Form
+      className="med-high-width"
+      onSubmit={(evt) => handleSubmit(evt, text)}
+    >
+      <Form.Group as={Row} controlId="commentText">
+        <Col sm={8}>
+          <Form.Control
+            id="textInput"
+            type="text"
+            value={text}
+            onChange={(evt) => {
+              setText(evt.target.value);
+            }}
+          />
+        </Col>
+        <Col sm={4}>
+          <Button variant="success" type="submit">
+            add comment
+          </Button>
+        </Col>
+      </Form.Group>
+    </Form>
   );
 };
 

@@ -11,6 +11,7 @@ import loginService from "./services/login";
 import { useSelector, useDispatch } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
 import { changeUser } from "./reducers/userReducer";
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -86,15 +87,6 @@ const App = () => {
   const blogMatch = useMatch("/blogs/:id");
   const blogId = blogMatch ? blogMatch.params.id : null;
 
-  const padding = {
-    padding: 5,
-  };
-
-  const navbarBasic = {
-    backgroundColor: "lightgrey",
-    padding: 3,
-  };
-
   return (
     <>
       {user === null && (
@@ -111,16 +103,27 @@ const App = () => {
       )}
       {user !== null && (
         <>
-          <nav style={navbarBasic}>
-            <Link style={padding} to="/">
-              blogs
-            </Link>
-            <Link style={padding} to="/users">
-              users
-            </Link>
-            <span style={padding}>{user.name} logged in</span>
-            <button onClick={handleLogout}>Log out</button>
-          </nav>
+          <Navbar bg="dark" variant="dark" expand="lg">
+            <Container>
+              <Navbar.Brand>
+                <Link to="/">blogs</Link>
+              </Navbar.Brand>
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="me-auto">
+                  <Nav.Link href="/users">users</Nav.Link>
+                  <Navbar.Text>{user.name} logged in</Navbar.Text>
+                  <Button
+                    className="ms-3"
+                    variant="secondary"
+                    onClick={handleLogout}
+                  >
+                    Log out
+                  </Button>
+                </Nav>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
           <Notification />
           <h2>blog app</h2>
           <Routes>

@@ -17,3 +17,11 @@
   padding: 10px;
   margin-bottom: 10px;
 }
+
+.med-width {
+  width: 30rem;
+}
+
+.med-high-width {
+  width: 45rem;
+}
